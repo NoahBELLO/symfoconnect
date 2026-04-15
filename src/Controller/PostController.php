@@ -21,7 +21,6 @@ final class PostController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Pour le jour 1, on associe un auteur fictif si l'auth n'est pas encore en place
             $author = $userRepository->findOneBy([]);
             if ($author) {
                 $post->setAuthor($author);

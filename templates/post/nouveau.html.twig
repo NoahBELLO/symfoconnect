@@ -6,9 +6,11 @@
 <div class="container">
     <h1>Créer un post</h1>
 
-    {{ form_start(form) }}
-        {{ form_row(form.content) }}
-        <button type="submit" class="btn-submit">Publier</button>
-    {{ form_end(form) }}
+    <div class="post-form">
+        {{ form_start(form) }}
+            {{ form_row(form.content) }}
+            <button type="submit" class="btn-submit">Publier</button>
+        {{ form_end(form) }}
+    </div>
 </div>
 {% endblock %}
