@@ -36,62 +36,20 @@ class AppFixtures extends Fixture
         }
 
         $postsData = [
-            [
-                'user'     => $users[0],
-                'text'     => 'Bonjour tout le monde ! Ravi de rejoindre SymfoConnect.',
-                'image'    => null,
-                'location' => 'Paris, France',
-            ],
-            [
-                'user'     => $users[0],
-                'text'     => 'Une superbe journée pour coder en Symfony !',
-                'image'    => null,
-                'location' => 'Lyon, France',
-            ],
-            [
-                'user'     => $users[1],
-                'text'     => 'Je partage mes aventures de voyage ici.',
-                'image'    => null,
-                'location' => 'Bordeaux, France',
-            ],
-            [
-                'user'     => $users[1],
-                'text'     => 'Symfony 7 est vraiment impressionnant.',
-                'image'    => null,
-                'location' => null,
-            ],
-            [
-                'user'     => $users[2],
-                'text'     => 'Première publication, contente d\'être là !',
-                'image'    => null,
-                'location' => 'Marseille, France',
-            ],
-            [
-                'user'     => $users[3],
-                'text'     => 'Le café du matin avec du code, rien de mieux.',
-                'image'    => null,
-                'location' => 'Toulouse, France',
-            ],
-            [
-                'user'     => $users[4],
-                'text'     => 'Quelqu\'un d\'autre apprend Symfony ici ?',
-                'image'    => null,
-                'location' => 'Nantes, France',
-            ],
-            [
-                'user'     => $users[4],
-                'text'     => 'Les fixtures Doctrine sont vraiment pratiques pour les tests.',
-                'image'    => null,
-                'location' => null,
-            ],
+            ['author' => $users[0], 'content' => 'Bonjour tout le monde ! Ravi de rejoindre SymfoConnect.'],
+            ['author' => $users[0], 'content' => 'Une superbe journée pour coder en Symfony !'],
+            ['author' => $users[1], 'content' => 'Je partage mes aventures de voyage ici.'],
+            ['author' => $users[1], 'content' => 'Symfony 7 est vraiment impressionnant.'],
+            ['author' => $users[2], 'content' => 'Première publication, contente d\'être là !'],
+            ['author' => $users[3], 'content' => 'Le café du matin avec du code, rien de mieux.'],
+            ['author' => $users[4], 'content' => 'Quelqu\'un d\'autre apprend Symfony ici ?'],
+            ['author' => $users[4], 'content' => 'Les fixtures Doctrine sont vraiment pratiques pour les tests.'],
         ];
 
         foreach ($postsData as $data) {
             $post = new Post();
-            $post->setUser($data['user']);
-            $post->setText($data['text']);
-            $post->setImage($data['image']);
-            $post->setLocation($data['location']);
+            $post->setAuthor($data['author']);
+            $post->setContent($data['content']);
             $manager->persist($post);
         }
 
