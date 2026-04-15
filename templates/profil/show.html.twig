@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil de {{ user.username }}{% endblock %}
+
+{% block body %}
+<div class="container">
+    <section class="profil-header">
+        {% if user.avatarUrl %}
+            <img src="{{ user.avatarUrl }}" alt="Avatar de {{ user.username }}" class="profil-avatar">
+        {% endif %}
+        <h1>{{ user.username }}</h1>
+        {% if user.bio %}
+            <p class="profil-bio">{{ user.bio }}</p>
+        {% endif %}
+        <p class="profil-date">Membre depuis le {{ user.createdAt|date('d/m/Y') }}</p>
+    </section>
+
+    <section class="profil-posts">
+        <h2>Posts de {{ user.username }}</h2>
+
+        {% if user.posts is empty %}
+            <p>Cet utilisateur n'a pas encore publié de post.</p>
+        {% else %}
+            {% for post in user.posts %}
+                <article class="post-card">
+                    <p class="post-content">{{ post.content }}</p>
+                    <footer class="post-meta">{{ post.createdAt|date('d/m/Y à H:i') }}</footer>
+                </article>
+            {% endfor %}
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

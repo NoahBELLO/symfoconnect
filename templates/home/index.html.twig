@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SymfoConnect — Accueil{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Derniers posts</h1>
+
+    {% if posts is empty %}
+        <p>Aucun post pour l'instant.</p>
+    {% else %}
+        {% for post in posts %}
+            <article class="post-card">
+                <p class="post-content">{{ post.content }}</p>
+                <footer class="post-meta">
+                    Par <a href="{{ path('app_profil', { username: post.author.username }) }}">{{ post.author.username }}</a>
+                    — {{ post.createdAt|date('d/m/Y à H:i') }}
+                </footer>
+            </article>
+        {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}

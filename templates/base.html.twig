@@ -19,6 +19,19 @@
         {% endif %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <nav>
+            <a href="{{ path('app_home') }}">Accueil</a>
+            <a href="{{ path('app_post_nouveau') }}">Nouveau post</a>
+        </nav>
+
+        <main>
+            {% for type, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="flash flash-{{ type }}">{{ message }}</div>
+                {% endfor %}
+            {% endfor %}
+
+            {% block body %}{% endblock %}
+        </main>
     </body>
 </html>
