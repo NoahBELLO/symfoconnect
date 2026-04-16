@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PostRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
@@ -23,9 +25,17 @@ class Post
     #[ORM\JoinColumn(nullable: false)]
     private ?User $author = null;
 
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'likedPosts')]
+    #[ORM\JoinTable(name: 'post_likes')]
+    private Collection $likedBy;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->likedBy = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -67,5 +77,40 @@ class Post
         $this->author = $author;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getLikedBy(): Collection
+    {
+        return $this->likedBy;
+    }
+
+    public function addLikedBy(User $user): static
+    {
+        if (!$this->likedBy->contains($user)) {
+            $this->likedBy->add($user);
+        }
+
+        return $this;
+    }
+
+    public function removeLikedBy(User $user): static
+    {
+        $this->likedBy->removeElement($user);
+
+        return $this;
+    }
+
+    public function isLikedBy(User $user): bool
+    {
+        foreach ($this->likedBy as $liker) {
+            if ($liker->getId() === $user->getId()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -12,6 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[UniqueEntity(fields: ['email'], message: 'Un compte existe déjà avec ces informations.')]
 #[UniqueEntity(fields: ['username'], message: 'Ce nom d\'utilisateur est déjà pris.')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -53,9 +54,44 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'author', orphanRemoval: true)]
     private Collection $posts;
 
+    /**
+     * Utilisateurs que cet utilisateur suit (côté propriétaire)
+     * @var Collection<int, User>
+     */
+    #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'followers')]
+    #[ORM\JoinTable(
+        name: 'user_follows',
+        joinColumns: [new ORM\JoinColumn(name: 'follower_id', referencedColumnName: 'id')],
+        inverseJoinColumns: [new ORM\JoinColumn(name: 'following_id', referencedColumnName: 'id')]
+    )]
+    private Collection $following;
+
+    /**
+     * Utilisateurs qui suivent cet utilisateur (côté inverse)
+     * @var Collection<int, User>
+     */
+    #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'following')]
+    private Collection $followers;
+
+    /**
+     * @var Collection<int, Post>
+     */
+    #[ORM\ManyToMany(targetEntity: Post::class, mappedBy: 'likedBy')]
+    private Collection $likedPosts;
+
+    /**
+     * @var Collection<int, Notification>
+     */
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'recipient', orphanRemoval: true)]
+    private Collection $notifications;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
+        $this->following = new ArrayCollection();
+        $this->followers = new ArrayCollection();
+        $this->likedPosts = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
     }
 
@@ -92,7 +128,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
@@ -123,21 +158,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * Ensure the session doesn't contain actual password hashes by CRC32C-hashing them, as supported since Symfony 7.3.
-     */
     public function __serialize(): array
     {
         $data = (array) $this;
         $data["\0" . self::class . "\0password"] = hash('crc32c', $this->password);
-        
+
         return $data;
     }
 
     #[\Deprecated]
     public function eraseCredentials(): void
     {
-        // @deprecated, to be removed when upgrading to Symfony 8
     }
 
     public function getUsername(): ?string
@@ -215,5 +246,53 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getFollowing(): Collection
+    {
+        return $this->following;
+    }
+
+    public function addFollowing(User $user): static
+    {
+        if (!$this->following->contains($user)) {
+            $this->following->add($user);
+        }
+
+        return $this;
+    }
+
+    public function removeFollowing(User $user): static
+    {
+        $this->following->removeElement($user);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getFollowers(): Collection
+    {
+        return $this->followers;
+    }
+
+    /**
+     * @return Collection<int, Post>
+     */
+    public function getLikedPosts(): Collection
+    {
+        return $this->likedPosts;
+    }
+
+    /**
+     * @return Collection<int, Notification>
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
     }
 }

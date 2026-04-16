@@ -172,3 +172,166 @@ h2 { font-size: 1.2rem; margin-bottom: 16px; color: #1c1e21; }
 }
 
 .btn-submit:hover { background: #166fe5; }
+
+/* ── Boutons génériques ── */
+.btn {
+    display: inline-block;
+    background: #1877f2;
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: .9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s;
+    text-decoration: none;
+}
+
+.btn:hover { background: #166fe5; color: #fff; text-decoration: none; }
+
+.btn-secondary {
+    background: #e4e6eb;
+    color: #1c1e21;
+}
+
+.btn-secondary:hover { background: #d8dadf; color: #1c1e21; }
+
+.btn-danger {
+    background: #e74c3c;
+    color: #fff;
+}
+
+.btn-danger:hover { background: #c0392b; }
+
+/* ── Actions d'un post (like + supprimer) ── */
+.post-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid #f0f2f5;
+}
+
+.btn-like {
+    background: none;
+    border: 1px solid #dddfe2;
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: .88rem;
+    color: #606770;
+    cursor: pointer;
+    transition: all .2s;
+}
+
+.btn-like:hover {
+    background: #fff0f0;
+    border-color: #e74c3c;
+    color: #e74c3c;
+}
+
+.btn-like.liked {
+    background: #fff0f0;
+    border-color: #e74c3c;
+    color: #e74c3c;
+    font-weight: 600;
+}
+
+/* ── Stats profil (followers / following) ── */
+.profil-stats {
+    display: flex;
+    gap: 24px;
+    margin: 6px 0;
+    font-size: .95rem;
+    color: #606770;
+}
+
+.profil-stats strong {
+    color: #1c1e21;
+    font-size: 1.05rem;
+}
+
+/* ── Formulaires login / inscription ── */
+.form-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 36px 32px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.1);
+    max-width: 420px;
+    margin: 40px auto;
+}
+
+.form-card h1 {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.form-card .form-row,
+.form-card div {
+    margin-bottom: 16px;
+}
+
+.form-card label {
+    display: block;
+    font-weight: 600;
+    font-size: .9rem;
+    margin-bottom: 6px;
+    color: #1c1e21;
+}
+
+.form-card input[type="text"],
+.form-card input[type="email"],
+.form-card input[type="password"] {
+    width: 100%;
+    border: 1px solid #dddfe2;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color .2s;
+}
+
+.form-card input:focus {
+    outline: none;
+    border-color: #1877f2;
+    box-shadow: 0 0 0 3px rgba(24,119,242,.15);
+}
+
+.form-card .btn,
+.form-card .btn-submit {
+    width: 100%;
+    padding: 11px;
+    font-size: 1rem;
+    margin-top: 8px;
+    text-align: center;
+}
+
+.form-card p {
+    text-align: center;
+    margin-top: 18px;
+    font-size: .9rem;
+    color: #606770;
+}
+
+.form-card .alert-danger {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: .9rem;
+    margin-bottom: 16px;
+}
+
+/* ── Message vide (feed, profil) ── */
+.empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    color: #90949c;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+}
+
+.empty-state a { font-weight: 600; }

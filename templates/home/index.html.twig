@@ -7,7 +7,9 @@
     <h1>Derniers posts</h1>
 
     {% if posts is empty %}
-        <p>Aucun post pour l'instant.</p>
+        <div class="empty-state">
+            <p>Aucun post pour l'instant.</p>
+        </div>
     {% else %}
         {% for post in posts %}
             <article class="post-card">
@@ -16,6 +18,25 @@
                     Par <a href="{{ path('app_profil', { username: post.author.username }) }}">{{ post.author.username }}</a>
                     — {{ post.createdAt|date('d/m/Y à H:i') }}
                 </footer>
+                <div class="post-actions">
+                    {% if app.user %}
+                        <form method="post" action="{{ path('app_post_like', { id: post.id }) }}" style="display:inline;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('like' ~ post.id) }}">
+                            <button type="submit" class="btn-like {% if post.isLikedBy(app.user) %}liked{% endif %}">
+                                ♥ {{ post.likedBy|length }}
+                            </button>
+                        </form>
+
+                        {% if app.user.id == post.author.id %}
+                            <form method="post" action="{{ path('app_post_supprimer', { id: post.id }) }}" style="display:inline;" onsubmit="return confirm('Supprimer ce post ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
+                                <button type="submit" class="btn btn-danger">Supprimer</button>
+                            </form>
+                        {% endif %}
+                    {% else %}
+                        <span>♥ {{ post.likedBy|length }}</span>
+                    {% endif %}
+                </div>
             </article>
         {% endfor %}
     {% endif %}

@@ -13,18 +13,44 @@
             <p class="profil-bio">{{ user.bio }}</p>
         {% endif %}
         <p class="profil-date">Membre depuis le {{ user.createdAt|date('d/m/Y') }}</p>
+
+        <div class="profil-stats">
+            <span><strong>{{ user.followers|length }}</strong> abonné(s)</span>
+            &nbsp;·&nbsp;
+            <span><strong>{{ user.following|length }}</strong> abonnement(s)</span>
+        </div>
+
+        {% if app.user and not isSelf %}
+            {% if isFollowing %}
+                <form method="post" action="{{ path('app_unfollow', { id: user.id }) }}" style="display:inline;">
+                    <input type="hidden" name="_token" value="{{ csrf_token('unfollow' ~ user.id) }}">
+                    <button type="submit" class="btn btn-secondary">Ne plus suivre</button>
+                </form>
+            {% else %}
+                <form method="post" action="{{ path('app_follow', { id: user.id }) }}" style="display:inline;">
+                    <input type="hidden" name="_token" value="{{ csrf_token('follow' ~ user.id) }}">
+                    <button type="submit" class="btn">Suivre</button>
+                </form>
+            {% endif %}
+        {% endif %}
     </section>
 
     <section class="profil-posts">
         <h2>Posts de {{ user.username }}</h2>
 
         {% if user.posts is empty %}
-            <p>Cet utilisateur n'a pas encore publié de post.</p>
+            <div class="empty-state">
+                <p>Cet utilisateur n'a pas encore publié de post.</p>
+            </div>
         {% else %}
             {% for post in user.posts %}
                 <article class="post-card">
                     <p class="post-content">{{ post.content }}</p>
-                    <footer class="post-meta">{{ post.createdAt|date('d/m/Y à H:i') }}</footer>
+                    <footer class="post-meta">
+                        {{ post.createdAt|date('d/m/Y à H:i') }}
+                        &nbsp;·&nbsp;
+                        {{ post.likedBy|length }} like(s)
+                    </footer>
                 </article>
             {% endfor %}
         {% endif %}

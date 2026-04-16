@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon fil — SymfoConnect{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Mon fil d'actualité</h1>
+
+    {% if not hasFollowing %}
+        <div class="empty-state">
+            <p>Vous ne suivez personne pour l'instant.<br>
+            <a href="{{ path('app_home') }}">Découvrez des utilisateurs</a> et commencez à les suivre !</p>
+        </div>
+    {% elseif posts is empty %}
+        <div class="empty-state">
+            <p>Les personnes que vous suivez n'ont pas encore publié de post.</p>
+        </div>
+    {% else %}
+        {% for post in posts %}
+            <article class="post-card">
+                <p class="post-content">{{ post.content }}</p>
+                <footer class="post-meta">
+                    Par <a href="{{ path('app_profil', { username: post.author.username }) }}">{{ post.author.username }}</a>
+                    — {{ post.createdAt|date('d/m/Y à H:i') }}
+                </footer>
+                <div class="post-actions">
+                    <form method="post" action="{{ path('app_post_like', { id: post.id }) }}" style="display:inline;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('like' ~ post.id) }}">
+                        <button type="submit" class="btn-like {% if post.isLikedBy(app.user) %}liked{% endif %}">
+                            ♥ {{ post.likedBy|length }}
+                        </button>
+                    </form>
+
+                    {% if app.user.id == post.author.id %}
+                        <form method="post" action="{{ path('app_post_supprimer', { id: post.id }) }}" style="display:inline;" onsubmit="return confirm('Supprimer ce post ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
+                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </article>
+        {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}
