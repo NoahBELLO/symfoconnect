@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes messages{% endblock %}
+
+{% block body %}
+<h1>Messagerie</h1>
+
+{% if conversations is empty %}
+    <p>Aucune conversation pour le moment.</p>
+{% else %}
+    <ul>
+        {% for conv in conversations %}
+            <li>
+                <a href="{{ path('app_messages_show', { username: conv.partner.username }) }}">
+                    <strong>{{ conv.partner.username }}</strong>
+                    — {{ conv.lastMessage.content|slice(0, 60) }}{% if conv.lastMessage.content|length > 60 %}…{% endif %}
+                    <small>({{ conv.lastMessage.createdAt|date('d/m/Y H:i') }})</small>
+                    {% if conv.lastMessage.recipient == app.user and not conv.lastMessage.isRead %}
+                        <span style="color:red">● non lu</span>
+                    {% endif %}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}

@@ -11,22 +11,30 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Cache\CacheInterface;
 
 final class PostController extends AbstractController
 {
     #[Route('/post/nouveau', name: 'app_post_nouveau')]
     #[IsGranted('ROLE_USER')]
-    public function nouveau(Request $request, EntityManagerInterface $em): Response
+    public function nouveau(Request $request, EntityManagerInterface $em, CacheInterface $cache): Response
     {
         $post = new Post();
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $post->setAuthor($this->getUser());
+            /** @var \App\Entity\User $author */
+            $author = $this->getUser();
+            $post->setAuthor($author);
 
             $em->persist($post);
             $em->flush();
+
+            // Invalider le cache du fil d'actualité des abonnés
+            foreach ($author->getFollowers() as $follower) {
+                $cache->delete('feed_user_' . $follower->getId());
+            }
 
             $this->addFlash('success', 'Post publié avec succès !');
 

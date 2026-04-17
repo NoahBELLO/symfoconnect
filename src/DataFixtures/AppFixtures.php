@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Message;
 use App\Entity\Notification;
 use App\Entity\Post;
 use App\Entity\User;
@@ -107,6 +108,23 @@ class AppFixtures extends Fixture
             $notif->setType('follow');
             $notif->setContent($content);
             $manager->persist($notif);
+        }
+
+        // --- Messages privés ---
+        $messagesData = [
+            ['sender' => $alice, 'recipient' => $bob,   'content' => 'Salut Bob, comment ça va ?'],
+            ['sender' => $bob,   'recipient' => $alice,  'content' => 'Très bien Alice, merci !'],
+            ['sender' => $alice, 'recipient' => $bob,    'content' => 'Super, à bientôt !'],
+            ['sender' => $carol, 'recipient' => $alice,  'content' => 'Alice, tu as vu le dernier post ?'],
+            ['sender' => $alice, 'recipient' => $carol,  'content' => 'Oui, très intéressant !'],
+        ];
+
+        foreach ($messagesData as $data) {
+            $message = new Message();
+            $message->setSender($data['sender']);
+            $message->setRecipient($data['recipient']);
+            $message->setContent($data['content']);
+            $manager->persist($message);
         }
 
         $manager->flush();

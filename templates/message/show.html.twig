@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conversation avec {{ partner.username }}{% endblock %}
+
+{% block body %}
+<h1>Conversation avec {{ partner.username }}</h1>
+<a href="{{ path('app_messages') }}">← Retour aux messages</a>
+
+<div style="margin: 1em 0; border: 1px solid #ccc; padding: 1em; max-height: 400px; overflow-y: auto;">
+    {% if messages is empty %}
+        <p>Aucun message. Commencez la conversation !</p>
+    {% else %}
+        {% for message in messages %}
+            <div style="margin-bottom: 0.8em; text-align: {{ message.sender == app.user ? 'right' : 'left' }};">
+                <strong>{{ message.sender.username }}</strong>
+                <span style="font-size: 0.8em; color: #888;">({{ message.createdAt|date('d/m/Y H:i') }})</span>
+                <div style="display: inline-block; background: {{ message.sender == app.user ? '#d0eaff' : '#eee' }}; padding: 0.4em 0.8em; border-radius: 8px;">
+                    {{ message.content }}
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
+
+<form method="post">
+    <textarea name="content" rows="3" placeholder="Votre message..." style="width: 100%;" required></textarea>
+    <br>
+    <button type="submit">Envoyer</button>
+</form>
+{% endblock %}

@@ -26,6 +26,7 @@
             {% if app.user %}
                 <a href="{{ path('app_feed') }}">Mon fil</a>
                 <a href="{{ path('app_post_nouveau') }}">+ Nouveau post</a>
+                <a href="{{ path('app_messages') }}">Messages</a>
                 <a href="{{ path('app_profil', { username: app.user.username }) }}">{{ app.user.username }}</a>
                 <a href="{{ path('app_logout') }}">Déconnexion</a>
             {% else %}

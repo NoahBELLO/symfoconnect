@@ -17,11 +17,11 @@ class PostType extends AbstractType
         $builder->add('content', TextareaType::class, [
             'label' => 'Contenu',
             'constraints' => [
-                new NotBlank(['message' => 'Le contenu ne peut pas être vide.']),
-                new Length([
-                    'min' => 5,
-                    'minMessage' => 'Le contenu doit faire au moins {{ limit }} caractères.',
-                ]),
+                new NotBlank(message: 'Le contenu ne peut pas être vide.'),
+                new Length(
+                    min: 5,
+                    minMessage: 'Le contenu doit faire au moins {{ limit }} caractères.',
+                ),
             ],
             'attr' => ['rows' => 5, 'placeholder' => 'Quoi de neuf ?'],
         ]);
